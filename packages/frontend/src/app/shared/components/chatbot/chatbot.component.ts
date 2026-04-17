@@ -29,7 +29,7 @@ export class ChatbotComponent {
     if (this.isOpen && !this.hasGreeted) {
       this.hasGreeted = true;
       this.addAssistantMessage(
-        '¡Hola! Soy **Kiro**, tu asistente de Conecta 2.0. Para ayudarte mejor, ¿qué API estás buscando hoy?'
+        '¡Hola! Soy **Evo**, tu asistente de Conecta 2.0. Para ayudarte mejor, ¿qué API estás buscando hoy?'
       );
     }
   }
