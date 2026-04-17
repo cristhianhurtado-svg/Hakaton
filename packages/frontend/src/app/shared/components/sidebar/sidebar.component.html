@@ -1,10 +1,10 @@
 <nav class="sidebar" [class.sidebar--collapsed]="collapsed" role="navigation" aria-label="Navegación principal">
-  <!-- Brand Wordmark -->
-  <a routerLink="/dashboard" class="sidebar__brand" *ngIf="!collapsed">
-    <span class="sidebar__brand-name">Conecta</span><span class="sidebar__brand-version">2.0</span>
+  <!-- Logo Seguros Bolívar -->
+  <a routerLink="/dashboard" class="sidebar__logo" *ngIf="!collapsed">
+    <img src="assets/logo-seguros-bolivar.webp" alt="Seguros Bolívar" class="sidebar__logo-img" />
   </a>
-  <a routerLink="/dashboard" class="sidebar__brand sidebar__brand--collapsed" *ngIf="collapsed">
-    <span class="sidebar__brand-icon">C</span>
+  <a routerLink="/dashboard" class="sidebar__logo sidebar__logo--collapsed" *ngIf="collapsed">
+    <img src="assets/logo-seguros-bolivar.webp" alt="Seguros Bolívar" class="sidebar__logo-icon" />
   </a>
 
   <!-- Toggle -->
