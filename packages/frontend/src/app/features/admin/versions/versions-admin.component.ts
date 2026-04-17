@@ -56,10 +56,11 @@ export class VersionsAdminComponent implements OnInit {
 
   private loadVersions(): void {
     this.http
-      .get<{ data: ApiVersion[] }>(buildUrl('versions'))
+      .get<any>(buildUrl('versions'))
       .subscribe({
         next: (res) => {
-          this.versions = res.data;
+          // Backend may return array directly or { data: [...] }
+          this.versions = Array.isArray(res) ? res : (res.data || []);
           this.loading = false;
         },
         error: () => (this.loading = false),

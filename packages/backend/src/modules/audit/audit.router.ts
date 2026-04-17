@@ -20,6 +20,21 @@ router.post('/reports',
   }
 );
 
+/** GET /v1/api/admin/audit/logs — Raw audit logs */
+router.get('/logs', async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (process.env.USE_MOCK_DB === 'true') {
+      const { getMockTable } = await import('../../db/mock-pool');
+      const logs = getMockTable('audit.audit_logs')
+        .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        .slice(0, 100);
+      res.json({ data: logs });
+      return;
+    }
+    res.json({ data: [] });
+  } catch (error) { next(error); }
+});
+
 /** GET /v1/api/admin/audit/dashboard — Req 16.5 */
 router.get('/dashboard', async (_req: Request, res: Response, next: NextFunction) => {
   try {

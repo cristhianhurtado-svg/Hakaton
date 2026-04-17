@@ -40,21 +40,21 @@
           </ng-template>
           <ng-template pTemplate="body" let-version>
             <tr>
-              <td>{{ version.apiDefinitionId | slice:0:8 }}...</td>
-              <td><strong>v{{ version.versionNumber }}</strong></td>
+              <td>{{ $any(version).api_name || version.api_name || '—' }}</td>
+              <td><strong>v{{ $any(version).version_number || version.versionNumber }}</strong></td>
               <td>
-                <p-tag [value]="version.lifecycleStatus" [severity]="getStatusSeverity(version.lifecycleStatus)" />
+                <p-tag [value]="$any(version).lifecycle_status || version.lifecycleStatus" [severity]="getStatusSeverity($any(version).lifecycle_status || version.lifecycleStatus)" />
               </td>
-              <td>{{ version.consumerCount ?? 'N/A' }}</td>
-              <td>{{ version.publishedAt ? (version.publishedAt | date:'mediumDate') : '—' }}</td>
-              <td>{{ version.sunsetDate ? (version.sunsetDate | date:'mediumDate') : '—' }}</td>
+              <td>{{ $any(version).consumer_count ?? version.consumerCount ?? '—' }}</td>
+              <td>{{ ($any(version).published_at || version.publishedAt) ? (($any(version).published_at || version.publishedAt) | date:'mediumDate') : '—' }}</td>
+              <td>{{ ($any(version).sunset_date || version.sunsetDate) ? (($any(version).sunset_date || version.sunsetDate) | date:'mediumDate') : '—' }}</td>
               <td>
                 <p-button
                   icon="pi pi-arrow-up"
                   styleClass="p-button-text p-button-sm"
                   pTooltip="Promover"
                   (onClick)="openPromoteDialog(version)"
-                  [disabled]="version.lifecycleStatus === 'active' || version.lifecycleStatus === 'sunset'"
+                  [disabled]="($any(version).lifecycle_status || version.lifecycleStatus) === 'active' || ($any(version).lifecycle_status || version.lifecycleStatus) === 'sunset'"
                 />
               </td>
             </tr>
@@ -77,8 +77,8 @@
         [style]="{ width: '400px' }"
       >
         <div *ngIf="selectedVersion">
-          <p><strong>Versión:</strong> v{{ selectedVersion.versionNumber }}</p>
-          <p><strong>Estado actual:</strong> {{ selectedVersion.lifecycleStatus }}</p>
+          <p><strong>Versión:</strong> v{{ $any(selectedVersion).version_number || selectedVersion.versionNumber }}</p>
+          <p><strong>Estado actual:</strong> {{ $any(selectedVersion).lifecycle_status || selectedVersion.lifecycleStatus }}</p>
           <div style="margin-top: 1rem;">
             <label for="promoteTarget">Promover a:</label>
             <p-dropdown

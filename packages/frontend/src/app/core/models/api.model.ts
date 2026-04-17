@@ -41,17 +41,27 @@ export interface ApiDefinition {
   [key: string]: unknown;
 }
 
-/** API version */
+/** API version — supports both camelCase and snake_case */
 export interface ApiVersion {
   id: string;
-  apiDefinitionId: string;
-  versionNumber: string;
-  lifecycleStatus: LifecycleStatus;
-  publishedAt: string | null;
-  deprecatedAt: string | null;
-  sunsetDate: string | null;
+  apiDefinitionId?: string;
+  api_definition_id?: string;
+  versionNumber?: string;
+  version_number?: string;
+  lifecycleStatus?: LifecycleStatus;
+  lifecycle_status?: string;
+  publishedAt?: string | null;
+  published_at?: string | null;
+  deprecatedAt?: string | null;
+  deprecated_at?: string | null;
+  sunsetDate?: string | null;
+  sunset_date?: string | null;
   consumerCount?: number;
-  createdAt: string;
+  consumer_count?: number;
+  createdAt?: string;
+  created_at?: string;
+  api_name?: string;
+  [key: string]: unknown;
 }
 
 /** Sunset plan */

@@ -41,16 +41,16 @@
           </ng-template>
           <ng-template pTemplate="body" let-partner>
             <tr>
-              <td>{{ partner.companyName }}</td>
+              <td>{{ partner.company_name || partner.companyName }}</td>
               <td>{{ partner.email }}</td>
               <td>
-                <p-tag [value]="partner.profileType" severity="info" />
+                <p-tag [value]="partner.profile_type || partner.profileType" severity="info" />
               </td>
               <td>
                 <p-tag [value]="partner.status" [severity]="getStatusSeverity(partner.status)" />
               </td>
-              <td>{{ partner.applicationCount }}</td>
-              <td>{{ partner.lastActivityAt ? (partner.lastActivityAt | date:'mediumDate') : 'N/A' }}</td>
+              <td>{{ partner.application_count || partner.applicationCount || 0 }}</td>
+              <td>{{ (partner.last_activity_at || partner.lastActivityAt) ? ((partner.last_activity_at || partner.lastActivityAt) | date:'mediumDate') : 'N/A' }}</td>
               <td>
                 <p-button
                   icon="pi pi-ban"
@@ -87,7 +87,7 @@
         [style]="{ width: '500px' }"
       >
         <div *ngIf="selectedPartner">
-          <p><strong>Partner:</strong> {{ selectedPartner.companyName }}</p>
+          <p><strong>Partner:</strong> {{ selectedPartner.company_name || selectedPartner.companyName }}</p>
           <p><strong>Acción:</strong> {{ statusAction }}</p>
           <div style="margin-top: 1rem;">
             <label for="reason">Razón (mínimo 10 caracteres):</label>

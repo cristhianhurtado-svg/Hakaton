@@ -55,7 +55,7 @@ export class AuditAdminComponent implements OnInit {
       .get<{ data: AuditLogEntry[] }>(buildUrl('audit', '/logs'))
       .subscribe({
         next: (res) => {
-          this.logs = res.data;
+          this.logs = res.data || [];
           this.loading = false;
         },
         error: () => (this.loading = false),

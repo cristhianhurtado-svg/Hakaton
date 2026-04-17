@@ -10,16 +10,22 @@ export type AppStatus = 'active' | 'suspended' | 'revoked';
 /** Environment types */
 export type EnvironmentType = 'sandbox' | 'production';
 
-/** Partner summary (list view) */
+/** Partner summary (list view) — supports snake_case from backend */
 export interface PartnerSummary {
   id: string;
-  companyName: string;
+  companyName?: string;
+  company_name?: string;
   email: string;
-  profileType: ProfileType;
+  profileType?: ProfileType;
+  profile_type?: string;
   status: PartnerStatus;
-  applicationCount: number;
-  lastActivityAt: string | null;
-  createdAt: string;
+  applicationCount?: number;
+  application_count?: number;
+  lastActivityAt?: string | null;
+  last_activity_at?: string | null;
+  createdAt?: string;
+  created_at?: string;
+  [key: string]: unknown;
 }
 
 /** Application */

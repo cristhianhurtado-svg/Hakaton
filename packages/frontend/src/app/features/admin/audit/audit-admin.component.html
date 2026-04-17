@@ -62,16 +62,16 @@
           </ng-template>
           <ng-template pTemplate="body" let-log>
             <tr>
-              <td><code>{{ log.apiEndpoint }}</code></td>
+              <td><code>{{ log.api_endpoint || log.apiEndpoint }}</code></td>
               <td>
-                <p-tag [value]="log.httpMethod" severity="info" />
+                <p-tag [value]="log.http_method || log.httpMethod" severity="info" />
               </td>
               <td>
-                <p-tag [value]="log.responseStatus.toString()" [severity]="getStatusSeverity(log.responseStatus)" />
+                <p-tag [value]="(log.response_status || log.responseStatus).toString()" [severity]="getStatusSeverity(log.response_status || log.responseStatus)" />
               </td>
-              <td>{{ log.responseTimeMs }}ms</td>
-              <td><code>{{ log.partnerId | slice:0:8 }}...</code></td>
-              <td>{{ log.createdAt | date:'medium' }}</td>
+              <td>{{ log.response_time_ms || log.responseTimeMs }}ms</td>
+              <td><code>{{ (log.partner_id || log.partnerId) | slice:0:8 }}...</code></td>
+              <td>{{ (log.created_at || log.createdAt) | date:'medium' }}</td>
             </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage">
