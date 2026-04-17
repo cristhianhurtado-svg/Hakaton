@@ -1,39 +1,109 @@
 @use '../../shared/styles/admin-layout';
 
-.stat-card__value--danger {
-  color: var(--sb-ui-color-feedback-error-base, #e63946);
+/* ============================================================
+   Analytics — Charts & Metrics
+   Style: Vercel Analytics / Stripe Dashboard
+   ============================================================ */
+
+.stat-card__value--error {
+  color: var(--c-error, #DC2626);
 }
 
-.latency-grid {
+.stat-card__icon--error {
+  background: var(--c-error-bg, #FEF2F2);
+  color: var(--c-error, #DC2626);
+}
+
+.stat-card__icon--warning {
+  background: var(--c-warning-bg, #FFFBEB);
+  color: var(--c-warning, #D97706);
+}
+
+/* ─── Charts Layout ───────────────────────────────────────── */
+
+.charts-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--sb-ui-spacing-lg, 1.5rem);
-  text-align: center;
+  grid-template-columns: 1fr 380px;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
 }
 
-.latency-item {
-  &__label {
+.chart-card {
+  background: var(--c-bg, #FFFFFF);
+  border: 1px solid var(--c-border, #F0F0F0);
+  border-radius: var(--radius-xl, 20px);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+
+  &--wide { min-width: 0; }
+  &--narrow { min-width: 0; }
+
+  &__header {
+    padding: 20px 24px 0;
+  }
+
+  &__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--c-text, #111827);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  &__subtitle {
+    font-size: 0.6875rem;
+    color: var(--c-text-muted, #9CA3AF);
+    margin-top: 2px;
     display: block;
-    font-size: var(--sb-ui-font-size-sm, 0.875rem);
-    color: var(--sb-ui-color-grayscale-D200, #525252);
-    margin-bottom: var(--sb-ui-spacing-xs, 0.25rem);
   }
 
-  &__value {
-    font-size: var(--sb-ui-font-size-xl, 1.5rem);
-    font-weight: 700;
-    color: var(--sb-ui-color-grayscale-D400, #1a1a2e);
+  &__body {
+    padding: 16px 20px 20px;
+
+    &--centered {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 }
 
-.chart-placeholder {
-  text-align: center;
-  padding: var(--sb-ui-spacing-2xl, 3rem);
-  color: var(--sb-ui-color-grayscale-D200, #525252);
+/* ─── Latency Summary Pills ───────────────────────────────── */
 
-  &__icon {
-    font-size: 3rem;
-    color: var(--sb-ui-color-neutral-300, #c4c4c4);
-    margin-bottom: var(--sb-ui-spacing-md, 1rem);
+.latency-summary {
+  display: flex;
+  gap: 12px;
+  padding: 0 24px 20px;
+  flex-wrap: wrap;
+}
+
+.latency-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--c-text-secondary, #6B7280);
+  background: var(--c-bg-subtle, #F9FAFB);
+  padding: 5px 12px;
+  border-radius: var(--radius-full, 9999px);
+  border: 1px solid var(--c-border, #F0F0F0);
+
+  strong {
+    color: var(--c-text, #111827);
+    font-weight: 600;
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+
+    &--p50 { background: #006B44; }
+    &--p95 { background: #FCE850; }
+    &--p99 { background: #DC2626; }
   }
 }

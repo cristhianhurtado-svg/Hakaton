@@ -12,73 +12,105 @@
       <div class="page-header">
         <div>
           <h1 class="page-header__title">Analíticas</h1>
-          <p class="page-header__subtitle">Métricas de uso, latencia y consumo de cuota</p>
+          <p class="page-header__subtitle">Métricas de uso, latencia y consumo — últimas 24 horas</p>
         </div>
         <div class="page-header__actions">
-          <p-button
-            label="Exportar CSV"
-            icon="pi pi-download"
-            styleClass="p-button-outlined"
-            (onClick)="onExport('csv')"
-          />
-          <p-button
-            label="Exportar JSON"
-            icon="pi pi-download"
-            styleClass="p-button-outlined"
-            (onClick)="onExport('json')"
-          />
+          <p-button label="CSV" icon="pi pi-download" styleClass="p-button-outlined" (onClick)="onExport('csv')" />
+          <p-button label="JSON" icon="pi pi-download" styleClass="p-button-outlined" (onClick)="onExport('json')" />
         </div>
       </div>
 
-      <!-- Metrics Cards -->
+      <!-- ─── Metric Cards ─────────────────────────────────── -->
       <div class="cards-grid" *ngIf="!loading && metrics">
         <div class="stat-card">
-          <div class="stat-card__label">Total de llamadas</div>
+          <div class="stat-card__icon"><i class="pi pi-arrow-right-arrow-left"></i></div>
+          <div class="stat-card__label">Total llamadas</div>
           <div class="stat-card__value">{{ metrics.totalCalls | number }}</div>
         </div>
         <div class="stat-card">
+          <div class="stat-card__icon"><i class="pi pi-check-circle"></i></div>
           <div class="stat-card__label">Tasa de éxito</div>
           <div class="stat-card__value">{{ metrics.successRate | number:'1.1-1' }}%</div>
         </div>
         <div class="stat-card">
+          <div class="stat-card__icon stat-card__icon--error"><i class="pi pi-times-circle"></i></div>
           <div class="stat-card__label">Tasa de error</div>
-          <div class="stat-card__value stat-card__value--danger">{{ metrics.errorRate | number:'1.2-2' }}%</div>
+          <div class="stat-card__value stat-card__value--error">{{ metrics.errorRate | number:'1.1-1' }}%</div>
         </div>
         <div class="stat-card">
+          <div class="stat-card__icon stat-card__icon--warning"><i class="pi pi-gauge"></i></div>
           <div class="stat-card__label">Cuota usada</div>
-          <div class="stat-card__value">{{ metrics.quotaConsumption.percentage | number:'1.0-0' }}%</div>
+          <div class="stat-card__value">{{ metrics.quotaConsumption.used | number }} / {{ metrics.quotaConsumption.limit | number }}</div>
         </div>
       </div>
 
-      <!-- Latency Card -->
-      <div class="content-card" *ngIf="!loading && metrics">
-        <div class="content-card__header">
-          <h2 class="content-card__title">Latencia</h2>
+      <!-- ─── Charts Row 1: Traffic + Status ───────────────── -->
+      <div class="charts-row" *ngIf="!loading && metrics">
+        <div class="chart-card chart-card--wide">
+          <div class="chart-card__header">
+            <h3 class="chart-card__title">Tráfico de Requests</h3>
+            <span class="chart-card__subtitle">Requests por hora — últimas 24h</span>
+          </div>
+          <div class="chart-card__body">
+            <p-chart type="line" [data]="trafficChartData" [options]="trafficChartOptions" height="260px" />
+          </div>
         </div>
-        <div class="latency-grid">
-          <div class="latency-item">
-            <span class="latency-item__label">P50</span>
-            <span class="latency-item__value">{{ metrics.latency.p50 | number:'1.0-0' }}ms</span>
+
+        <div class="chart-card chart-card--narrow">
+          <div class="chart-card__header">
+            <h3 class="chart-card__title">Distribución de Status</h3>
+            <span class="chart-card__subtitle">Códigos HTTP</span>
           </div>
-          <div class="latency-item">
-            <span class="latency-item__label">P95</span>
-            <span class="latency-item__value">{{ metrics.latency.p95 | number:'1.0-0' }}ms</span>
-          </div>
-          <div class="latency-item">
-            <span class="latency-item__label">P99</span>
-            <span class="latency-item__value">{{ metrics.latency.p99 | number:'1.0-0' }}ms</span>
+          <div class="chart-card__body chart-card__body--centered">
+            <p-chart type="doughnut" [data]="statusChartData" [options]="statusChartOptions" height="220px" />
           </div>
         </div>
       </div>
 
-      <!-- Chart Placeholder -->
-      <div class="content-card">
-        <div class="content-card__header">
-          <h2 class="content-card__title">Gráficos de uso</h2>
+      <!-- ─── Charts Row 2: Latency + Errors ──────────────── -->
+      <div class="charts-row" *ngIf="!loading && metrics">
+        <div class="chart-card chart-card--wide">
+          <div class="chart-card__header">
+            <h3 class="chart-card__title">Latencia</h3>
+            <span class="chart-card__subtitle">P50 / P95 / P99 por hora</span>
+          </div>
+          <div class="chart-card__body">
+            <p-chart type="line" [data]="latencyChartData" [options]="latencyChartOptions" height="260px" />
+          </div>
+
+          <!-- Latency summary -->
+          <div class="latency-summary">
+            <div class="latency-pill">
+              <span class="latency-pill__dot latency-pill__dot--p50"></span>
+              P50: <strong>{{ metrics.latency.p50 | number:'1.0-0' }}ms</strong>
+            </div>
+            <div class="latency-pill">
+              <span class="latency-pill__dot latency-pill__dot--p95"></span>
+              P95: <strong>{{ metrics.latency.p95 | number:'1.0-0' }}ms</strong>
+            </div>
+            <div class="latency-pill">
+              <span class="latency-pill__dot latency-pill__dot--p99"></span>
+              P99: <strong>{{ metrics.latency.p99 | number:'1.0-0' }}ms</strong>
+            </div>
+          </div>
         </div>
-        <div class="chart-placeholder">
-          <i class="pi pi-chart-line chart-placeholder__icon"></i>
-          <p>Los gráficos interactivos de uso se integrarán con Chart.js próximamente.</p>
+
+        <div class="chart-card chart-card--narrow">
+          <div class="chart-card__header">
+            <h3 class="chart-card__title">Errores por Hora</h3>
+            <span class="chart-card__subtitle">Requests con status >= 400</span>
+          </div>
+          <div class="chart-card__body">
+            <p-chart type="bar" [data]="errorChartData" [options]="errorChartOptions" height="260px" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div class="cards-grid" *ngIf="loading">
+        <div class="stat-card" *ngFor="let i of [1,2,3,4]">
+          <div class="stat-card__label">Cargando...</div>
+          <div class="stat-card__value">—</div>
         </div>
       </div>
     </main>
