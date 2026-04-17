@@ -1,0 +1,75 @@
+<p-toast />
+
+<div class="admin-layout">
+  <aside class="admin-layout__sidebar">
+    <app-sidebar />
+  </aside>
+
+  <div class="admin-layout__main">
+    <app-header />
+
+    <main class="admin-layout__content">
+      <!-- Loading -->
+      <div *ngIf="loading" class="content-card">
+        <p>Cargando detalle de la API...</p>
+      </div>
+
+      <!-- API Detail -->
+      <ng-container *ngIf="!loading && api">
+        <div class="page-header">
+          <div>
+            <h1 class="page-header__title">{{ api.name }}</h1>
+            <p class="page-header__subtitle">{{ api.description }}</p>
+          </div>
+          <div class="page-header__actions">
+            <p-button
+              label="Probar en Sandbox"
+              icon="pi pi-code"
+              routerLink="/sandbox"
+              styleClass="p-button-outlined"
+            />
+            <p-button label="Volver al catálogo" icon="pi pi-arrow-left" routerLink="/catalog" />
+          </div>
+        </div>
+
+        <!-- Info Cards -->
+        <div class="cards-grid">
+          <div class="stat-card">
+            <div class="stat-card__label">Versión actual</div>
+            <div class="stat-card__value">{{ api.currentVersion || 'N/A' }}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__label">Perfil</div>
+            <div class="stat-card__value">{{ api.profileSupport }}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__label">ACORD</div>
+            <div class="stat-card__value">{{ api.acordCompatible ? 'Sí' : 'No' }}</div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="content-card">
+          <p-tabView>
+            <p-tabPanel header="Documentación">
+              <p>La documentación interactiva de esta API estará disponible aquí. Incluirá endpoints, esquemas de request/response y ejemplos de uso.</p>
+            </p-tabPanel>
+            <p-tabPanel header="Versiones">
+              <p>Historial de versiones y planes de sunset se mostrarán en esta sección.</p>
+            </p-tabPanel>
+            <p-tabPanel header="SDKs">
+              <p>Descarga de SDKs auto-generados (JavaScript, Python, Java) disponible próximamente.</p>
+            </p-tabPanel>
+          </p-tabView>
+        </div>
+      </ng-container>
+
+      <!-- Not Found -->
+      <div *ngIf="!loading && !api" class="content-card" style="text-align: center; padding: 3rem;">
+        <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: var(--sb-ui-color-warning);"></i>
+        <p>API no encontrada</p>
+        <p-button label="Volver al catálogo" icon="pi pi-arrow-left" routerLink="/catalog" />
+      </div>
+    </main>
+  </div>
+</div>

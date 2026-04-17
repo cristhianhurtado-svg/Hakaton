@@ -1,0 +1,103 @@
+<p-toast />
+
+<div class="admin-layout">
+  <aside class="admin-layout__sidebar">
+    <app-sidebar />
+  </aside>
+
+  <div class="admin-layout__main">
+    <app-header />
+
+    <main class="admin-layout__content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Gestión de Specs OpenAPI</h1>
+          <p class="page-header__subtitle">Carga y valida especificaciones OpenAPI para nuevas APIs</p>
+        </div>
+      </div>
+
+      <!-- Upload Form -->
+      <div class="content-card">
+        <div class="content-card__header">
+          <h2 class="content-card__title">Cargar especificación</h2>
+        </div>
+
+        <div class="spec-form">
+          <div class="spec-form__row">
+            <div class="spec-form__field">
+              <label class="spec-form__label" for="specName">Nombre de la API</label>
+              <input
+                id="specName"
+                type="text"
+                pInputText
+                [(ngModel)]="specName"
+                placeholder="Mi API de Seguros"
+              />
+            </div>
+            <div class="spec-form__field">
+              <label class="spec-form__label" for="specFormat">Formato</label>
+              <p-dropdown
+                id="specFormat"
+                [options]="formatOptions"
+                [(ngModel)]="specFormat"
+                optionLabel="label"
+                optionValue="value"
+              />
+            </div>
+          </div>
+
+          <div class="spec-form__row">
+            <div class="spec-form__field">
+              <label class="spec-form__label" for="profileSupport">Perfil soportado</label>
+              <p-dropdown
+                id="profileSupport"
+                [options]="profileOptions"
+                [(ngModel)]="profileSupport"
+                optionLabel="label"
+                optionValue="value"
+              />
+            </div>
+            <div class="spec-form__field">
+              <label class="spec-form__label">Compatible ACORD</label>
+              <p-inputSwitch [(ngModel)]="acordCompatible" />
+            </div>
+          </div>
+
+          <div class="spec-form__field">
+            <label class="spec-form__label" for="specContent">Especificación OpenAPI</label>
+            <textarea
+              id="specContent"
+              pInputTextarea
+              [(ngModel)]="specContent"
+              [rows]="15"
+              class="spec-editor w-full"
+              placeholder="Pegue aquí su especificación OpenAPI en YAML o JSON..."
+            ></textarea>
+          </div>
+
+          <p-button
+            label="Validar y cargar"
+            icon="pi pi-upload"
+            (onClick)="onUpload()"
+            [loading]="loading"
+          />
+        </div>
+
+        <!-- Validation Errors -->
+        <div class="validation-errors" *ngIf="validationErrors.length > 0">
+          <p class="validation-errors__title">
+            <i class="pi pi-exclamation-triangle"></i>
+            Errores de validación ({{ validationErrors.length }})
+          </p>
+          <div class="validation-errors__item" *ngFor="let err of validationErrors">
+            <div class="validation-errors__path">{{ err.path }}</div>
+            <div class="validation-errors__message">{{ err.message }}</div>
+            <div class="validation-errors__fix" *ngIf="err.suggestedFix">
+              💡 {{ err.suggestedFix }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+@use '../../shared/styles/admin-layout';
+
+.stat-card__value--danger {
+  color: var(--sb-ui-color-feedback-error-base, #e63946);
+}
+
+.latency-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sb-ui-spacing-lg, 1.5rem);
+  text-align: center;
+}
+
+.latency-item {
+  &__label {
+    display: block;
+    font-size: var(--sb-ui-font-size-sm, 0.875rem);
+    color: var(--sb-ui-color-grayscale-D200, #525252);
+    margin-bottom: var(--sb-ui-spacing-xs, 0.25rem);
+  }
+
+  &__value {
+    font-size: var(--sb-ui-font-size-xl, 1.5rem);
+    font-weight: 700;
+    color: var(--sb-ui-color-grayscale-D400, #1a1a2e);
+  }
+}
+
+.chart-placeholder {
+  text-align: center;
+  padding: var(--sb-ui-spacing-2xl, 3rem);
+  color: var(--sb-ui-color-grayscale-D200, #525252);
+
+  &__icon {
+    font-size: 3rem;
+    color: var(--sb-ui-color-neutral-300, #c4c4c4);
+    margin-bottom: var(--sb-ui-spacing-md, 1rem);
+  }
+}

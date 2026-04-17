@@ -1,0 +1,69 @@
+<p-toast />
+
+<div class="admin-layout">
+  <aside class="admin-layout__sidebar">
+    <app-sidebar />
+  </aside>
+
+  <div class="admin-layout__main">
+    <app-header />
+
+    <main class="admin-layout__content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Notificaciones</h1>
+          <p class="page-header__subtitle">Historial de notificaciones y preferencias</p>
+        </div>
+      </div>
+
+      <!-- Notifications Table -->
+      <div class="content-card">
+        <p-table
+          [value]="notifications"
+          [loading]="loading"
+          [paginator]="true"
+          [rows]="10"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} notificaciones"
+          responsiveLayout="scroll"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Tipo</th>
+              <th>Asunto</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-notif>
+            <tr>
+              <td>
+                <p-tag [value]="notif.notificationType" [severity]="getTypeSeverity(notif.notificationType)" />
+              </td>
+              <td>
+                <strong>{{ notif.subject }}</strong>
+                <p class="notification-body">{{ notif.body }}</p>
+              </td>
+              <td>{{ notif.createdAt | date:'medium' }}</td>
+              <td>
+                <p-button
+                  icon="pi pi-check"
+                  styleClass="p-button-text p-button-sm"
+                  pTooltip="Marcar como leída"
+                  (onClick)="markAsRead(notif)"
+                />
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="4" style="text-align: center; padding: 2rem;">
+                No tienes notificaciones.
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </main>
+  </div>
+</div>

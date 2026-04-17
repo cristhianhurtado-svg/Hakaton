@@ -1,0 +1,26 @@
+{
+  "name": "conecta2",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/shared",
+    "packages/backend",
+    "packages/frontend"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev --workspace=@conecta2/backend",
+    "dev:frontend": "npm run start --workspace=@conecta2/frontend",
+    "build:shared": "npm run build --workspace=@conecta2/shared",
+    "build:backend": "npm run build --workspace=@conecta2/backend",
+    "build:frontend": "npm run build --workspace=@conecta2/frontend",
+    "test:backend": "npm run test --workspace=@conecta2/backend",
+    "typecheck": "npm run typecheck --workspace=@conecta2/shared && npm run typecheck --workspace=@conecta2/backend",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "db:migrate": "npm run migrate:up --workspace=@conecta2/backend",
+    "db:seed": "psql -h localhost -U conecta2 -d conecta2 -f packages/backend/migrations/001_initial-schema.sql"
+  },
+  "dependencies": {
+    "@seguros-bolivar/ui-bundle": "^1.0.5"
+  }
+}

@@ -1,0 +1,88 @@
+<p-toast />
+
+<div class="admin-layout">
+  <aside class="admin-layout__sidebar">
+    <app-sidebar />
+  </aside>
+
+  <div class="admin-layout__main">
+    <app-header />
+
+    <main class="admin-layout__content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Auditoría</h1>
+          <p class="page-header__subtitle">Logs de acceso y métricas de uso del sistema</p>
+        </div>
+      </div>
+
+      <!-- Dashboard Cards -->
+      <div class="cards-grid" *ngIf="dashboard">
+        <div class="stat-card">
+          <div class="stat-card__label">Total llamadas</div>
+          <div class="stat-card__value">{{ dashboard.totalCalls | number }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Partners únicos</div>
+          <div class="stat-card__value">{{ dashboard.uniquePartners | number }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Tiempo respuesta promedio</div>
+          <div class="stat-card__value">{{ dashboard.avgResponseTime | number:'1.0-0' }}ms</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Tasa de error</div>
+          <div class="stat-card__value">{{ dashboard.errorRate | number:'1.2-2' }}%</div>
+        </div>
+      </div>
+
+      <!-- Audit Logs Table -->
+      <div class="content-card">
+        <div class="content-card__header">
+          <h2 class="content-card__title">Logs de auditoría</h2>
+        </div>
+        <p-table
+          [value]="logs"
+          [loading]="loading"
+          [paginator]="true"
+          [rows]="15"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+          responsiveLayout="scroll"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Endpoint</th>
+              <th>Método</th>
+              <th>Status</th>
+              <th>Latencia</th>
+              <th>Partner ID</th>
+              <th>Fecha</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-log>
+            <tr>
+              <td><code>{{ log.apiEndpoint }}</code></td>
+              <td>
+                <p-tag [value]="log.httpMethod" severity="info" />
+              </td>
+              <td>
+                <p-tag [value]="log.responseStatus.toString()" [severity]="getStatusSeverity(log.responseStatus)" />
+              </td>
+              <td>{{ log.responseTimeMs }}ms</td>
+              <td><code>{{ log.partnerId | slice:0:8 }}...</code></td>
+              <td>{{ log.createdAt | date:'medium' }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 2rem;">
+                No hay registros de auditoría.
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </main>
+  </div>
+</div>

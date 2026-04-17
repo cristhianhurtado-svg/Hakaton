@@ -1,0 +1,103 @@
+<p-toast />
+
+<div class="admin-layout">
+  <aside class="admin-layout__sidebar">
+    <app-sidebar />
+  </aside>
+
+  <div class="admin-layout__main">
+    <app-header />
+
+    <main class="admin-layout__content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Gobernanza de Versiones</h1>
+          <p class="page-header__subtitle">Gestiona el ciclo de vida de las versiones de APIs</p>
+        </div>
+      </div>
+
+      <!-- Versions Table -->
+      <div class="content-card">
+        <p-table
+          [value]="versions"
+          [loading]="loading"
+          [paginator]="true"
+          [rows]="10"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} versiones"
+          responsiveLayout="scroll"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>API</th>
+              <th pSortableColumn="versionNumber">Versión <p-sortIcon field="versionNumber" /></th>
+              <th pSortableColumn="lifecycleStatus">Estado <p-sortIcon field="lifecycleStatus" /></th>
+              <th>Consumidores</th>
+              <th>Publicada</th>
+              <th>Sunset</th>
+              <th>Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-version>
+            <tr>
+              <td>{{ version.apiDefinitionId | slice:0:8 }}...</td>
+              <td><strong>v{{ version.versionNumber }}</strong></td>
+              <td>
+                <p-tag [value]="version.lifecycleStatus" [severity]="getStatusSeverity(version.lifecycleStatus)" />
+              </td>
+              <td>{{ version.consumerCount ?? 'N/A' }}</td>
+              <td>{{ version.publishedAt ? (version.publishedAt | date:'mediumDate') : '—' }}</td>
+              <td>{{ version.sunsetDate ? (version.sunsetDate | date:'mediumDate') : '—' }}</td>
+              <td>
+                <p-button
+                  icon="pi pi-arrow-up"
+                  styleClass="p-button-text p-button-sm"
+                  pTooltip="Promover"
+                  (onClick)="openPromoteDialog(version)"
+                  [disabled]="version.lifecycleStatus === 'active' || version.lifecycleStatus === 'sunset'"
+                />
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7" style="text-align: center; padding: 2rem;">
+                No hay versiones registradas.
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <!-- Promote Dialog -->
+      <p-dialog
+        header="Promover versión"
+        [(visible)]="showPromoteDialog"
+        [modal]="true"
+        [style]="{ width: '400px' }"
+      >
+        <div *ngIf="selectedVersion">
+          <p><strong>Versión:</strong> v{{ selectedVersion.versionNumber }}</p>
+          <p><strong>Estado actual:</strong> {{ selectedVersion.lifecycleStatus }}</p>
+          <div style="margin-top: 1rem;">
+            <label for="promoteTarget">Promover a:</label>
+            <p-dropdown
+              id="promoteTarget"
+              [options]="promoteOptions"
+              [(ngModel)]="promoteTarget"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Seleccione estado"
+              styleClass="w-full"
+              [style]="{ marginTop: '0.5rem' }"
+            />
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button label="Cancelar" styleClass="p-button-text" (onClick)="showPromoteDialog = false" />
+          <p-button label="Promover" icon="pi pi-arrow-up" (onClick)="confirmPromote()" [disabled]="!promoteTarget" />
+        </ng-template>
+      </p-dialog>
+    </main>
+  </div>
+</div>

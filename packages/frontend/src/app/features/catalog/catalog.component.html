@@ -1,0 +1,258 @@
+<p-toast />
+
+<div class="admin-layout">
+  <aside class="admin-layout__sidebar">
+    <app-sidebar />
+  </aside>
+
+  <div class="admin-layout__main">
+    <app-header />
+
+    <main class="admin-layout__content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Catálogo de APIs</h1>
+          <p class="page-header__subtitle">Explora y descubre las APIs disponibles</p>
+        </div>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="content-card">
+        <div class="catalog-filters">
+          <span class="p-input-icon-left catalog-filters__search">
+            <i class="pi pi-search"></i>
+            <input
+              type="text"
+              pInputText
+              [(ngModel)]="searchQuery"
+              placeholder="Buscar APIs por nombre, descripción..."
+              (keyup.enter)="onSearch()"
+              class="w-full"
+            />
+          </span>
+          <p-dropdown
+            [options]="categories"
+            [(ngModel)]="selectedCategory"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Todas las categorías"
+            [showClear]="true"
+            (onChange)="loadApis()"
+            styleClass="catalog-filters__dropdown"
+          />
+        </div>
+      </div>
+
+      <!-- API Cards Grid — click opens modal -->
+      <div class="cards-grid" *ngIf="!loading">
+        <div
+          class="api-card"
+          *ngFor="let api of apis"
+          (click)="openApiDetail(api)"
+          tabindex="0"
+          role="button"
+          (keyup.enter)="openApiDetail(api)"
+        >
+          <div class="api-card__header">
+            <h3 class="api-card__name">{{ api.name }}</h3>
+            <p-tag
+              [value]="getProfileSupport(api)"
+              [severity]="getProfileSupport(api) === 'both' ? 'success' : 'info'"
+            />
+          </div>
+          <p class="api-card__description">{{ api.description }}</p>
+          <div class="api-card__footer">
+            <span class="api-card__version" *ngIf="getApiVersion(api) !== 'N/A'">
+              v{{ getApiVersion(api) }}
+            </span>
+            <p-tag
+              *ngIf="isAcord(api)"
+              value="ACORD"
+              severity="warning"
+              [rounded]="true"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading Skeleton -->
+      <div class="cards-grid" *ngIf="loading">
+        <div class="api-card api-card--skeleton" *ngFor="let i of [1,2,3,4,5,6]">
+          <div class="api-card__header">
+            <div class="skeleton-line skeleton-line--title"></div>
+          </div>
+          <div class="skeleton-line skeleton-line--text"></div>
+          <div class="skeleton-line skeleton-line--text skeleton-line--short"></div>
+        </div>
+      </div>
+
+      <!-- Empty State — Premium branded -->
+      <div class="empty-state-premium" *ngIf="!loading && apis.length === 0">
+        <div class="empty-state-premium__icon-wrap">
+          <div class="empty-state-premium__icon-bg"></div>
+          <i class="pi pi-box empty-state-premium__icon"></i>
+        </div>
+        <h3 class="empty-state-premium__title">Aún no hay APIs aquí</h3>
+        <p class="empty-state-premium__text">
+          Intenta buscar con otros términos o cambia de categoría para explorar nuestro catálogo de APIs de seguros.
+        </p>
+        <div class="empty-state-premium__actions" *ngIf="searchQuery || selectedCategory">
+          <button class="btn btn--secondary" (click)="searchQuery = ''; selectedCategory = null; loadApis()">
+            <i class="pi pi-filter-slash"></i> Limpiar búsqueda
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ============================================================
+     API DETAILS MODAL — Premium Seguros Bolívar
+     Backdrop blur + white rounded container
+     ============================================================ -->
+<div
+  class="modal-backdrop"
+  *ngIf="showModal && selectedApi"
+  (click)="onBackdropClick($event)"
+  (keyup.escape)="closeModal()"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-label]="'Detalle de ' + getApiName(selectedApi)"
+>
+  <div class="modal" (click)="$event.stopPropagation()">
+
+    <!-- Close button -->
+    <button class="modal__close" (click)="closeModal()" aria-label="Cerrar" type="button">
+      <i class="pi pi-times"></i>
+    </button>
+
+    <!-- ─── HEADER ─────────────────────────────────────────── -->
+    <div class="modal__header">
+      <div class="modal__header-top">
+        <div class="modal__icon">
+          <i class="pi pi-car" *ngIf="getApiSlug(selectedApi).includes('auto')"></i>
+          <i class="pi pi-heart" *ngIf="getApiSlug(selectedApi).includes('vida')"></i>
+          <i class="pi pi-plus-circle" *ngIf="getApiSlug(selectedApi).includes('salud')"></i>
+          <i class="pi pi-home" *ngIf="getApiSlug(selectedApi).includes('hogar')"></i>
+          <i class="pi pi-file" *ngIf="getApiSlug(selectedApi).includes('emision') || getApiSlug(selectedApi).includes('soat')"></i>
+          <i class="pi pi-exclamation-triangle" *ngIf="getApiSlug(selectedApi).includes('siniestro')"></i>
+          <i class="pi pi-dollar" *ngIf="getApiSlug(selectedApi).includes('recaudo')"></i>
+          <i class="pi pi-search" *ngIf="getApiSlug(selectedApi).includes('consulta')"></i>
+          <i class="pi pi-lock" *ngIf="getApiSlug(selectedApi).includes('autenticacion')"></i>
+          <i class="pi pi-bell" *ngIf="getApiSlug(selectedApi).includes('notificacion')"></i>
+          <i class="pi pi-bolt" *ngIf="getApiSlug(selectedApi).includes('seguimiento')"></i>
+        </div>
+        <h2 class="modal__title">{{ getApiName(selectedApi) }}</h2>
+      </div>
+
+      <div class="modal__badges">
+        <span class="badge badge--version">v{{ getApiVersion(selectedApi) }}</span>
+        <span class="badge badge--acord" *ngIf="isAcord(selectedApi)">ACORD</span>
+        <span class="badge badge--profile">{{ getProfileSupport(selectedApi) }}</span>
+        <span class="badge badge--active">Activa</span>
+      </div>
+
+      <p class="modal__description">{{ selectedApi.description }}</p>
+    </div>
+
+    <!-- ─── TABS ───────────────────────────────────────────── -->
+    <div class="modal__tabs">
+      <button
+        class="modal__tab"
+        [class.modal__tab--active]="activeTab === 'general'"
+        (click)="activeTab = 'general'"
+        type="button"
+      >
+        <i class="pi pi-info-circle"></i> Información General
+      </button>
+      <button
+        class="modal__tab"
+        [class.modal__tab--active]="activeTab === 'specs'"
+        (click)="activeTab = 'specs'"
+        type="button"
+      >
+        <i class="pi pi-cog"></i> Especificaciones Técnicas
+      </button>
+    </div>
+
+    <!-- ─── TAB 1: Información General ─────────────────────── -->
+    <div class="modal__body" *ngIf="activeTab === 'general'">
+      <div class="info-section">
+        <h4 class="info-section__title">Casos de Uso</h4>
+        <ul class="info-section__list">
+          <li>Cotización de vehículos particulares y públicos</li>
+          <li>Cálculo de prima en tiempo real según perfil de riesgo</li>
+          <li>Integración con tabla Fasecolda para valoración</li>
+          <li>Soporte para múltiples coberturas (todo riesgo, pérdida total, RC)</li>
+        </ul>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <span class="info-card__label">SLA Disponibilidad</span>
+          <span class="info-card__value">99.9%</span>
+        </div>
+        <div class="info-card">
+          <span class="info-card__label">Latencia Promedio</span>
+          <span class="info-card__value">&lt; 200ms</span>
+        </div>
+        <div class="info-card">
+          <span class="info-card__label">Rate Limit</span>
+          <span class="info-card__value">200 req/min</span>
+        </div>
+        <div class="info-card">
+          <span class="info-card__label">Formato</span>
+          <span class="info-card__value">JSON (ACORD)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── TAB 2: Especificaciones Técnicas ───────────────── -->
+    <div class="modal__body" *ngIf="activeTab === 'specs'">
+      <div class="spec-row">
+        <span class="spec-row__label">Autenticación</span>
+        <span class="spec-row__value">
+          <span class="badge badge--version">OAuth 2.0</span>
+          <span class="badge badge--acord">mTLS</span>
+        </span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-row__label">Content-Type</span>
+        <code class="spec-row__code">application/json</code>
+      </div>
+      <div class="spec-row">
+        <span class="spec-row__label">Sandbox</span>
+        <code class="spec-row__code">https://sandbox.conecta2.segurosbolivar.com/v1/api/{{ getApiSlug(selectedApi) }}</code>
+      </div>
+      <div class="spec-row">
+        <span class="spec-row__label">Producción</span>
+        <code class="spec-row__code">https://api.conecta2.segurosbolivar.com/v1/api/{{ getApiSlug(selectedApi) }}</code>
+      </div>
+      <div class="spec-row">
+        <span class="spec-row__label">Versionamiento</span>
+        <code class="spec-row__code">Header: Accept-Version: {{ getApiVersion(selectedApi) }}</code>
+      </div>
+
+      <!-- Code Snippet -->
+      <div class="code-snippet">
+        <div class="code-snippet__header">
+          <span class="code-snippet__lang">cURL — Sandbox</span>
+          <button class="code-snippet__copy" type="button" aria-label="Copiar">
+            <i class="pi pi-copy"></i>
+          </button>
+        </div>
+        <pre class="code-snippet__body">{{ getCurlExample(selectedApi) }}</pre>
+      </div>
+    </div>
+
+    <!-- ─── FOOTER ─────────────────────────────────────────── -->
+    <div class="modal__footer">
+      <button class="btn btn--secondary" [routerLink]="['/catalog', selectedApi.id]" (click)="closeModal()">
+        <i class="pi pi-book"></i> Ver Documentación Completa
+      </button>
+      <button class="btn btn--primary" [routerLink]="['/sandbox']" [queryParams]="{api: getApiSlug(selectedApi)}" (click)="closeModal()">
+        <i class="pi pi-play"></i> Probar en Sandbox
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,285 @@
+/* ============================================================
+   Conecta 2.0 — Global Styles & Micro-Component System
+   Brand: Seguros Bolívar (#006B44 verde, #FCE850 amarillo)
+   Style: Vercel/Stripe premium
+   ============================================================ */
+
+@use 'app/shared/styles/theme-bolivar';
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* === Reset === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--c-text);
+  background-color: var(--c-bg-subtle);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: var(--c-brand);
+  text-decoration: none;
+  transition: color var(--duration) var(--ease);
+  &:hover { color: var(--c-brand-deep); }
+}
+
+/* ============================================================
+   BUTTON SYSTEM — Jerarquía Seguros Bolívar
+   Primary: Amarillo #FCE850 (CTAs)
+   Secondary: Borde verde/gris, fondo transparente
+   Text: Sin borde, solo texto
+   ============================================================ */
+
+.p-button {
+  border-radius: var(--radius-full) !important;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  letter-spacing: -0.01em;
+  transition: all var(--duration) var(--ease);
+  padding: 9px 22px;
+}
+
+/* Primary — Amarillo Bolívar */
+.p-button:not(.p-button-outlined):not(.p-button-text):not(.p-button-secondary):not(.p-button-danger):not(.p-button-sm) {
+  background: #FCE850 !important;
+  border-color: #FCE850 !important;
+  color: #3D3200 !important;
+
+  &:enabled:hover {
+    background: #F5DD30 !important;
+    border-color: #F5DD30 !important;
+    box-shadow: 0 0 0 3px rgba(252, 232, 80, 0.25);
+  }
+
+  &:enabled:focus {
+    box-shadow: 0 0 0 3px rgba(252, 232, 80, 0.35);
+  }
+}
+
+/* Secondary / Outlined — Verde corporativo o gris */
+.p-button-outlined,
+.p-button.p-button-outlined {
+  background: var(--c-bg) !important;
+  color: var(--c-brand) !important;
+  border-color: var(--c-border-hover) !important;
+
+  &:enabled:hover {
+    background: var(--c-bg-muted) !important;
+    border-color: var(--c-brand) !important;
+    color: var(--c-brand-deep) !important;
+  }
+
+  &:enabled:focus {
+    box-shadow: 0 0 0 3px var(--c-brand-light);
+  }
+}
+
+/* Text button — sin borde */
+.p-button-text,
+.p-button.p-button-text {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: var(--c-text-secondary) !important;
+
+  &:enabled:hover {
+    background: var(--c-bg-muted) !important;
+    color: var(--c-text) !important;
+  }
+}
+
+/* Small icon buttons */
+.p-button-sm,
+.p-button.p-button-sm {
+  padding: 6px 12px;
+  font-size: 0.75rem;
+}
+
+.p-button.p-button-icon-only {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+}
+
+/* ============================================================
+   INPUTS — Focus ring verde, nunca azul
+   ============================================================ */
+
+.p-inputtext {
+  border-radius: var(--radius-full) !important;
+  border-color: var(--c-border) !important;
+  font-family: var(--font-sans);
+  padding: 9px 18px;
+  font-size: 0.8125rem;
+  transition: all var(--duration) var(--ease);
+
+  &:enabled:focus {
+    border-color: var(--c-brand) !important;
+    box-shadow: 0 0 0 3px var(--c-brand-light) !important;
+    outline: none;
+  }
+}
+
+.p-inputtextarea {
+  border-radius: var(--radius-md) !important;
+  border-color: var(--c-border) !important;
+
+  &:enabled:focus {
+    border-color: var(--c-brand) !important;
+    box-shadow: 0 0 0 3px var(--c-brand-light) !important;
+  }
+}
+
+.p-dropdown {
+  border-radius: var(--radius-full) !important;
+  border-color: var(--c-border) !important;
+
+  &.p-focus {
+    border-color: var(--c-brand) !important;
+    box-shadow: 0 0 0 3px var(--c-brand-light) !important;
+  }
+}
+
+/* ============================================================
+   DIALOGS / MODALS — Backdrop blur, rounded, premium
+   ============================================================ */
+
+.p-dialog-mask {
+  background: rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+}
+
+.p-dialog {
+  border-radius: var(--radius-2xl, 24px) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+  border: none !important;
+  overflow: hidden;
+
+  .p-dialog-header {
+    padding: 24px 28px 16px !important;
+    border-bottom: none !important;
+    background: var(--c-bg) !important;
+
+    .p-dialog-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--c-text);
+      letter-spacing: -0.02em;
+    }
+
+    .p-dialog-header-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      color: var(--c-text-muted);
+      transition: all 150ms var(--ease);
+
+      &:hover {
+        background: var(--c-bg-muted);
+        color: var(--c-text);
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 3px var(--c-brand-light);
+      }
+    }
+  }
+
+  .p-dialog-content {
+    padding: 0 28px 20px !important;
+    background: var(--c-bg) !important;
+  }
+
+  .p-dialog-footer {
+    padding: 16px 28px 24px !important;
+    border-top: 1px solid var(--c-border) !important;
+    background: var(--c-bg) !important;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+}
+
+/* ============================================================
+   TAGS — Pill shaped
+   ============================================================ */
+
+.p-tag {
+  border-radius: var(--radius-full) !important;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 3px 10px;
+}
+
+/* ============================================================
+   TABLE — Clean borders
+   ============================================================ */
+
+.p-datatable {
+  .p-datatable-thead > tr > th {
+    background: var(--c-bg-subtle) !important;
+    color: var(--c-text-muted) !important;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-color: var(--c-border) !important;
+    padding: 10px 16px;
+  }
+
+  .p-datatable-tbody > tr > td {
+    border-color: var(--c-border) !important;
+    padding: 12px 16px;
+    font-size: 0.8125rem;
+  }
+
+  .p-datatable-tbody > tr:hover > td {
+    background: var(--c-bg-subtle) !important;
+  }
+
+  .p-paginator {
+    border: none !important;
+    padding: 12px 0;
+
+    .p-paginator-element {
+      border-radius: var(--radius-sm) !important;
+      min-width: 32px;
+      height: 32px;
+
+      &.p-highlight {
+        background: var(--c-brand) !important;
+        border-color: var(--c-brand) !important;
+        color: white !important;
+      }
+    }
+  }
+}
+
+/* ============================================================
+   CARD
+   ============================================================ */
+
+.p-card {
+  border-radius: var(--radius-xl) !important;
+  box-shadow: var(--shadow-xs) !important;
+  border: 1px solid var(--c-border);
+}
+
+/* === Utility === */
+.w-full { width: 100%; }
+
+/* === Scrollbar === */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--c-border-hover); border-radius: 10px; }
+
+/* === Remove all blue focus rings globally === */
+*:focus { outline-color: var(--c-brand) !important; }
+*:focus-visible { outline-color: var(--c-brand) !important; }

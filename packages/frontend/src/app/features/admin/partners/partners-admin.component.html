@@ -1,0 +1,112 @@
+<p-toast />
+
+<div class="admin-layout">
+  <aside class="admin-layout__sidebar">
+    <app-sidebar />
+  </aside>
+
+  <div class="admin-layout__main">
+    <app-header />
+
+    <main class="admin-layout__content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Gestión de Partners</h1>
+          <p class="page-header__subtitle">Administra los partners y sus aplicaciones</p>
+        </div>
+      </div>
+
+      <!-- Partners Table -->
+      <div class="content-card">
+        <p-table
+          [value]="partners"
+          [loading]="loading"
+          [paginator]="true"
+          [rows]="10"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} partners"
+          responsiveLayout="scroll"
+          [globalFilterFields]="['companyName', 'email']"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="companyName">Empresa <p-sortIcon field="companyName" /></th>
+              <th>Email</th>
+              <th>Perfil</th>
+              <th pSortableColumn="status">Estado <p-sortIcon field="status" /></th>
+              <th>Apps</th>
+              <th>Última actividad</th>
+              <th>Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-partner>
+            <tr>
+              <td>{{ partner.companyName }}</td>
+              <td>{{ partner.email }}</td>
+              <td>
+                <p-tag [value]="partner.profileType" severity="info" />
+              </td>
+              <td>
+                <p-tag [value]="partner.status" [severity]="getStatusSeverity(partner.status)" />
+              </td>
+              <td>{{ partner.applicationCount }}</td>
+              <td>{{ partner.lastActivityAt ? (partner.lastActivityAt | date:'mediumDate') : 'N/A' }}</td>
+              <td>
+                <p-button
+                  icon="pi pi-ban"
+                  styleClass="p-button-text p-button-sm p-button-danger"
+                  pTooltip="Suspender"
+                  (onClick)="openStatusDialog(partner, 'suspended')"
+                  [disabled]="partner.status !== 'active'"
+                />
+                <p-button
+                  icon="pi pi-check-circle"
+                  styleClass="p-button-text p-button-sm p-button-success"
+                  pTooltip="Activar"
+                  (onClick)="openStatusDialog(partner, 'active')"
+                  [disabled]="partner.status === 'active'"
+                />
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7" style="text-align: center; padding: 2rem;">
+                No hay partners registrados.
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <!-- Status Change Dialog -->
+      <p-dialog
+        header="Cambiar estado del partner"
+        [(visible)]="showStatusDialog"
+        [modal]="true"
+        [style]="{ width: '500px' }"
+      >
+        <div *ngIf="selectedPartner">
+          <p><strong>Partner:</strong> {{ selectedPartner.companyName }}</p>
+          <p><strong>Acción:</strong> {{ statusAction }}</p>
+          <div style="margin-top: 1rem;">
+            <label for="reason">Razón (mínimo 10 caracteres):</label>
+            <textarea
+              id="reason"
+              pInputTextarea
+              [(ngModel)]="statusReason"
+              [rows]="3"
+              class="w-full"
+              placeholder="Explique la razón del cambio de estado..."
+              style="margin-top: 0.5rem;"
+            ></textarea>
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button label="Cancelar" styleClass="p-button-text" (onClick)="showStatusDialog = false" />
+          <p-button label="Confirmar" icon="pi pi-check" (onClick)="confirmStatusChange()" />
+        </ng-template>
+      </p-dialog>
+    </main>
+  </div>
+</div>

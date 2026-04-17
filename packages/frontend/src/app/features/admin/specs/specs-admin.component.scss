@@ -1,0 +1,70 @@
+@use '../../../shared/styles/admin-layout';
+
+.spec-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-ui-spacing-lg, 1.5rem);
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sb-ui-spacing-md, 1rem);
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-ui-spacing-xs, 0.25rem);
+  }
+
+  &__label {
+    font-size: var(--sb-ui-font-size-sm, 0.875rem);
+    font-weight: 500;
+    color: var(--sb-ui-color-grayscale-D400, #1a1a2e);
+  }
+}
+
+.spec-editor {
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: var(--sb-ui-font-size-sm, 0.875rem);
+  min-height: 300px;
+}
+
+.validation-errors {
+  margin-top: var(--sb-ui-spacing-md, 1rem);
+
+  &__title {
+    font-weight: 600;
+    color: var(--sb-ui-color-feedback-error-base, #e63946);
+    margin-bottom: var(--sb-ui-spacing-sm, 0.5rem);
+  }
+
+  &__item {
+    background: rgba(230, 57, 70, 0.06);
+    border-left: 3px solid var(--sb-ui-color-feedback-error-base, #e63946);
+    padding: var(--sb-ui-spacing-sm, 0.5rem) var(--sb-ui-spacing-md, 1rem);
+    margin-bottom: var(--sb-ui-spacing-sm, 0.5rem);
+    border-radius: 0 8px 8px 0;
+  }
+
+  &__path {
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: var(--sb-ui-font-size-xs, 0.75rem);
+    color: var(--sb-ui-color-grayscale-D200, #525252);
+  }
+
+  &__message {
+    font-size: var(--sb-ui-font-size-sm, 0.875rem);
+    color: var(--sb-ui-color-grayscale-D400, #1a1a2e);
+  }
+
+  &__fix {
+    font-size: var(--sb-ui-font-size-xs, 0.75rem);
+    color: var(--sb-ui-color-feedback-success-base, #2dc653);
+    font-style: italic;
+  }
+}

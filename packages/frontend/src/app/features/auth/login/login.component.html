@@ -1,0 +1,85 @@
+<p-toast />
+
+<div class="login-page">
+  <div class="login-card">
+    <!-- Brand -->
+    <div class="login-card__brand">
+      <img
+        src="assets/logo-seguros-bolivar.webp"
+        alt="Seguros Bolívar"
+        class="login-card__logo-img"
+      />
+      <p class="login-card__subtitle">Portal de APIs — Conecta 2.0</p>
+    </div>
+
+    <!-- Form -->
+    <form class="login-card__form" (ngSubmit)="onLogin()">
+      <div class="login-card__field">
+        <label for="email" class="login-card__label">Correo electrónico</label>
+        <input
+          id="email"
+          type="email"
+          pInputText
+          [(ngModel)]="email"
+          name="email"
+          placeholder="usuario&#64;empresa.com"
+          class="w-full"
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="login-card__field">
+        <label for="password" class="login-card__label">Contraseña</label>
+        <p-password
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          [feedback]="false"
+          [toggleMask]="true"
+          placeholder="••••••••"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+        />
+      </div>
+
+      <p-button
+        type="submit"
+        label="Iniciar sesión"
+        icon="pi pi-sign-in"
+        [loading]="loading"
+        styleClass="w-full"
+        [style]="{ width: '100%' }"
+      />
+    </form>
+
+    <!-- Dev mode quick login -->
+    <div class="login-card__dev-shortcuts">
+      <p class="login-card__dev-label">
+        <i class="pi pi-code"></i> Acceso rápido (desarrollo)
+      </p>
+      <div class="login-card__dev-buttons">
+        <p-button
+          label="Partner"
+          icon="pi pi-user"
+          severity="secondary"
+          [outlined]="true"
+          size="small"
+          (onClick)="quickLogin('partner@dev.com')"
+        />
+        <p-button
+          label="Admin"
+          icon="pi pi-shield"
+          severity="warning"
+          [outlined]="true"
+          size="small"
+          (onClick)="quickLogin('admin@segurosbolivar.com')"
+        />
+      </div>
+    </div>
+
+    <p class="login-card__footer">
+      ¿No tienes cuenta?
+      <a href="mailto:soporte&#64;segurosbolivar.com">Contacta al administrador</a>
+    </p>
+  </div>
+</div>

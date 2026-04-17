@@ -1,0 +1,141 @@
+<p-toast />
+
+<div class="admin-layout">
+  <aside class="admin-layout__sidebar">
+    <app-sidebar />
+  </aside>
+
+  <div class="admin-layout__main">
+    <app-header />
+
+    <main class="admin-layout__content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Sandbox</h1>
+          <p class="page-header__subtitle">Prueba las APIs con datos ficticios — 100% PII enmascarado</p>
+        </div>
+      </div>
+
+      <div class="sandbox-layout">
+        <!-- ─── LEFT: API Templates ─────────────────────────── -->
+        <aside class="sandbox-templates">
+          <h3 class="sandbox-templates__title">APIs Disponibles</h3>
+          <div
+            class="sandbox-templates__item"
+            *ngFor="let tpl of apiTemplates"
+            [class.sandbox-templates__item--active]="selectedTemplate?.slug === tpl.slug"
+            (click)="selectTemplate(tpl)"
+          >
+            <span class="sandbox-templates__method" [attr.data-method]="tpl.method">{{ tpl.method }}</span>
+            <div class="sandbox-templates__info">
+              <span class="sandbox-templates__name">{{ tpl.name }}</span>
+              <span class="sandbox-templates__desc">{{ tpl.description }}</span>
+            </div>
+          </div>
+        </aside>
+
+        <!-- ─── RIGHT: Request/Response ─────────────────────── -->
+        <div class="sandbox-main">
+
+          <!-- Request Builder -->
+          <div class="sandbox-card">
+            <div class="sandbox-card__header">
+              <h3 class="sandbox-card__title">
+                <i class="pi pi-send"></i> Request
+              </h3>
+              <span class="sandbox-card__badge" *ngIf="selectedTemplate">
+                {{ selectedTemplate.name }}
+              </span>
+            </div>
+
+            <!-- URL Bar -->
+            <div class="url-bar">
+              <p-dropdown
+                [options]="httpMethods"
+                [(ngModel)]="selectedMethod"
+                optionLabel="label"
+                optionValue="value"
+                styleClass="url-bar__method"
+              />
+              <input
+                type="text"
+                pInputText
+                [(ngModel)]="requestUrl"
+                placeholder="/v1/sandbox/..."
+                class="url-bar__input"
+              />
+              <button class="url-bar__send" (click)="onSend()" [disabled]="loading">
+                <i [class]="loading ? 'pi pi-spin pi-spinner' : 'pi pi-play'"></i>
+                {{ loading ? 'Enviando...' : 'Enviar' }}
+              </button>
+            </div>
+
+            <!-- Body Editor -->
+            <div class="body-editor" *ngIf="['POST','PUT','PATCH'].includes(selectedMethod)">
+              <div class="body-editor__header">
+                <span class="body-editor__label">Body (JSON)</span>
+                <span class="body-editor__hint">application/json</span>
+              </div>
+              <textarea
+                class="body-editor__textarea"
+                [(ngModel)]="requestBody"
+                [rows]="12"
+                spellcheck="false"
+              ></textarea>
+            </div>
+
+            <div class="body-editor__empty" *ngIf="!['POST','PUT','PATCH'].includes(selectedMethod)">
+              <i class="pi pi-info-circle"></i>
+              Los requests {{ selectedMethod }} no llevan body.
+            </div>
+          </div>
+
+          <!-- Response -->
+          <div class="sandbox-card">
+            <div class="sandbox-card__header">
+              <h3 class="sandbox-card__title">
+                <i class="pi pi-arrow-down-left"></i> Response
+              </h3>
+              <div class="response-meta" *ngIf="hasResponse">
+                <span class="response-meta__status" [class]="getStatusClass()">
+                  {{ responseStatus }} {{ responseStatusText }}
+                </span>
+                <span class="response-meta__time">{{ responseTime }}ms</span>
+              </div>
+            </div>
+
+            <!-- Response Body -->
+            <div class="response-viewer" *ngIf="hasResponse">
+              <pre class="response-viewer__body">{{ responseBody }}</pre>
+            </div>
+
+            <!-- Empty State -->
+            <div class="response-empty" *ngIf="!hasResponse">
+              <i class="pi pi-arrow-up"></i>
+              <p>Haz clic en <strong>Enviar</strong> para ejecutar el request</p>
+              <p class="response-empty__hint">La respuesta contendrá datos ficticios con PII enmascarado</p>
+            </div>
+          </div>
+
+          <!-- History -->
+          <div class="sandbox-card" *ngIf="history.length > 0">
+            <div class="sandbox-card__header">
+              <h3 class="sandbox-card__title">
+                <i class="pi pi-history"></i> Historial
+              </h3>
+              <span class="sandbox-card__badge">{{ history.length }} requests</span>
+            </div>
+            <div class="history-list">
+              <div class="history-item" *ngFor="let item of history">
+                <span class="history-item__method" [attr.data-method]="item.method">{{ item.method }}</span>
+                <span class="history-item__url">{{ item.url }}</span>
+                <span class="history-item__status" [class]="getHistoryStatusClass(item.status)">{{ item.status }}</span>
+                <span class="history-item__time">{{ item.time }}ms</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

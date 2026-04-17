@@ -1,0 +1,140 @@
+<p-toast />
+
+<div class="admin-layout">
+  <aside class="admin-layout__sidebar">
+    <app-sidebar />
+  </aside>
+
+  <div class="admin-layout__main">
+    <app-header />
+
+    <main class="admin-layout__content">
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Consola de Analítica</h1>
+          <p class="page-header__subtitle">Métricas de consumo en tiempo real — últimas 24 horas</p>
+        </div>
+        <div class="page-header__actions">
+          <p-button
+            label="Ver Analíticas"
+            icon="pi pi-arrow-up-right"
+            routerLink="/analytics"
+          />
+        </div>
+      </div>
+
+      <!-- Metric Cards — Premium 4-column grid -->
+      <div class="cards-grid" *ngIf="!loading && metrics">
+
+        <!-- Total Calls -->
+        <div class="stat-card">
+          <div class="stat-card__icon">
+            <i class="pi pi-arrow-right-arrow-left"></i>
+          </div>
+          <div class="stat-card__label">Total de llamadas</div>
+          <div class="stat-card__value">{{ metrics.totalCalls | number }}</div>
+          <div class="stat-card__trend stat-card__trend--up">
+            <i class="pi pi-arrow-up" style="font-size: 0.625rem"></i>
+            Últimas 24h
+          </div>
+        </div>
+
+        <!-- Success Rate -->
+        <div class="stat-card">
+          <div class="stat-card__icon">
+            <i class="pi pi-check-circle"></i>
+          </div>
+          <div class="stat-card__label">Tasa de éxito</div>
+          <div class="stat-card__value">{{ metrics.successRate | number:'1.1-1' }}<span class="stat-card__unit">%</span></div>
+          <div class="stat-card__trend" [class.stat-card__trend--up]="metrics.successRate >= 95" [class.stat-card__trend--down]="metrics.successRate < 95">
+            <i [class]="metrics.successRate >= 95 ? 'pi pi-arrow-up' : 'pi pi-arrow-down'" style="font-size: 0.625rem"></i>
+            {{ metrics.successRate >= 95 ? 'Saludable' : 'Requiere atención' }}
+          </div>
+        </div>
+
+        <!-- Latency P95 -->
+        <div class="stat-card">
+          <div class="stat-card__icon stat-card__icon--info">
+            <i class="pi pi-clock"></i>
+          </div>
+          <div class="stat-card__label">Latencia P95</div>
+          <div class="stat-card__value">{{ metrics.latency.p95 | number:'1.0-0' }}<span class="stat-card__unit">ms</span></div>
+          <div class="stat-card__trend" [class.stat-card__trend--up]="metrics.latency.p95 <= 500" [class.stat-card__trend--down]="metrics.latency.p95 > 500">
+            <i [class]="metrics.latency.p95 <= 500 ? 'pi pi-arrow-up' : 'pi pi-arrow-down'" style="font-size: 0.625rem"></i>
+            P50: {{ metrics.latency.p50 | number:'1.0-0' }}ms · P99: {{ metrics.latency.p99 | number:'1.0-0' }}ms
+          </div>
+        </div>
+
+        <!-- Quota Consumption -->
+        <div class="stat-card">
+          <div class="stat-card__icon stat-card__icon--warning">
+            <i class="pi pi-gauge"></i>
+          </div>
+          <div class="stat-card__label">Consumo de cuota</div>
+          <div class="stat-card__value">{{ metrics.quotaConsumption.percentage | number:'1.0-0' }}<span class="stat-card__unit">%</span></div>
+
+          <!-- Progress bar -->
+          <div class="quota-bar">
+            <div class="quota-bar__fill"
+              [style.width.%]="metrics.quotaConsumption.percentage"
+              [class.quota-bar__fill--warning]="metrics.quotaConsumption.percentage >= 70"
+              [class.quota-bar__fill--danger]="metrics.quotaConsumption.percentage >= 90">
+            </div>
+          </div>
+
+          <div class="stat-card__badge" *ngIf="metrics.quotaConsumption.percentage >= 80">
+            <i class="pi pi-exclamation-triangle" style="font-size: 0.625rem"></i>
+            {{ metrics.quotaConsumption.used | number }} / {{ metrics.quotaConsumption.limit | number }} req
+          </div>
+          <div class="stat-card__trend stat-card__trend--up" *ngIf="metrics.quotaConsumption.percentage < 80">
+            {{ metrics.quotaConsumption.used | number }} / {{ metrics.quotaConsumption.limit | number }} req
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading Skeleton -->
+      <div class="cards-grid" *ngIf="loading">
+        <div class="stat-card stat-card--skeleton" *ngFor="let i of [1,2,3,4]">
+          <div class="skeleton skeleton--icon"></div>
+          <div class="skeleton skeleton--label"></div>
+          <div class="skeleton skeleton--value"></div>
+          <div class="skeleton skeleton--trend"></div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="content-card">
+        <div class="content-card__header">
+          <h2 class="content-card__title">Accesos rápidos</h2>
+        </div>
+        <div class="quick-actions">
+          <a class="quick-action" routerLink="/catalog">
+            <div class="quick-action__icon"><i class="pi pi-book"></i></div>
+            <div class="quick-action__text">
+              <span class="quick-action__label">Catálogo de APIs</span>
+              <span class="quick-action__desc">Explora las APIs disponibles</span>
+            </div>
+            <i class="pi pi-arrow-right quick-action__arrow"></i>
+          </a>
+          <a class="quick-action" routerLink="/credentials">
+            <div class="quick-action__icon"><i class="pi pi-key"></i></div>
+            <div class="quick-action__text">
+              <span class="quick-action__label">Mis Credenciales</span>
+              <span class="quick-action__desc">Gestiona OAuth 2.0 y mTLS</span>
+            </div>
+            <i class="pi pi-arrow-right quick-action__arrow"></i>
+          </a>
+          <a class="quick-action" routerLink="/sandbox">
+            <div class="quick-action__icon quick-action__icon--accent"><i class="pi pi-code"></i></div>
+            <div class="quick-action__text">
+              <span class="quick-action__label">Sandbox</span>
+              <span class="quick-action__desc">Prueba con datos ficticios</span>
+            </div>
+            <i class="pi pi-arrow-right quick-action__arrow"></i>
+          </a>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

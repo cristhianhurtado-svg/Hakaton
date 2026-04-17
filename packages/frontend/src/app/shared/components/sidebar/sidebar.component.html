@@ -1,0 +1,66 @@
+<nav class="sidebar" [class.sidebar--collapsed]="collapsed" role="navigation" aria-label="Navegación principal">
+  <!-- Logo -->
+  <div class="sidebar__logo">
+    <img
+      *ngIf="!collapsed"
+      src="assets/logo-seguros-bolivar.webp"
+      alt="Seguros Bolívar"
+      class="sidebar__logo-full"
+    />
+    <img
+      *ngIf="collapsed"
+      src="assets/logo-seguros-bolivar.webp"
+      alt="Seguros Bolívar"
+      class="sidebar__logo-icon"
+    />
+  </div>
+
+  <!-- Toggle -->
+  <button
+    class="sidebar__toggle"
+    (click)="toggleCollapse()"
+    [attr.aria-label]="collapsed ? 'Expandir menú' : 'Colapsar menú'"
+    type="button"
+  >
+    <i [class]="collapsed ? 'pi pi-angle-right' : 'pi pi-angle-left'"></i>
+  </button>
+
+  <!-- Main Navigation -->
+  <ul class="sidebar__nav">
+    <li *ngFor="let item of navItems" class="sidebar__nav-item">
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="sidebar__nav-link--active"
+        class="sidebar__nav-link"
+        [attr.title]="collapsed ? item.label : null"
+      >
+        <i [class]="item.icon" class="sidebar__nav-icon"></i>
+        <span class="sidebar__nav-label" *ngIf="!collapsed">{{ item.label }}</span>
+      </a>
+    </li>
+  </ul>
+
+  <!-- Admin Section -->
+  <div class="sidebar__section" *ngIf="isAdmin">
+    <div class="sidebar__section-title" *ngIf="!collapsed">Administración</div>
+    <ul class="sidebar__nav">
+      <li *ngFor="let item of adminItems" class="sidebar__nav-item">
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="sidebar__nav-link--active"
+          class="sidebar__nav-link"
+          [attr.title]="collapsed ? item.label : null"
+        >
+          <i [class]="item.icon" class="sidebar__nav-icon"></i>
+          <span class="sidebar__nav-label" *ngIf="!collapsed">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Conecta 2.0 badge at bottom -->
+  <div class="sidebar__footer" *ngIf="!collapsed">
+    <span class="sidebar__footer-badge">Conecta 2.0</span>
+    <span class="sidebar__footer-version">Portal de APIs</span>
+  </div>
+</nav>

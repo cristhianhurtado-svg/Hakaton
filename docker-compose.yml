@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  # ─── PostgreSQL 15 ─────────────────────────────────────────
+  postgres:
+    image: postgres:15.4-alpine
+    container_name: conecta2-postgres
+    environment:
+      POSTGRES_DB: conecta2
+      POSTGRES_USER: conecta2
+      POSTGRES_PASSWORD: conecta2_dev
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./packages/backend/migrations/001_initial-schema.sql:/docker-entrypoint-initdb.d/001_initial-schema.sql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U conecta2']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── Redis 7 ───────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: conecta2-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:

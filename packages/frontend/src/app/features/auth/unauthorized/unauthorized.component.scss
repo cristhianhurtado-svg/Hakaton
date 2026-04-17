@@ -1,0 +1,37 @@
+.unauthorized-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--sb-ui-bg-page, #f5f6fa);
+  padding: var(--sb-ui-spacing-md, 1rem);
+}
+
+.unauthorized-card {
+  text-align: center;
+  max-width: 480px;
+  background: var(--sb-ui-bg-surface, #ffffff);
+  border-radius: 16px;
+  padding: var(--sb-ui-spacing-2xl, 3rem);
+  box-shadow: var(--sb-ui-shadow-card, 0 2px 8px rgba(0, 0, 0, 0.08));
+
+  &__icon {
+    font-size: 3rem;
+    color: var(--sb-ui-color-danger, #e63946);
+    margin-bottom: var(--sb-ui-spacing-md, 1rem);
+  }
+
+  &__title {
+    font-size: var(--sb-ui-font-size-xl, 1.5rem);
+    font-weight: 700;
+    color: var(--sb-ui-text-primary, #1a1a2e);
+    margin: 0 0 var(--sb-ui-spacing-sm, 0.5rem);
+  }
+
+  &__message {
+    font-size: var(--sb-ui-font-size-base, 0.9375rem);
+    color: var(--sb-ui-text-secondary, #525252);
+    margin-bottom: var(--sb-ui-spacing-xl, 2rem);
+    line-height: 1.6;
+  }
+}

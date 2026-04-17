@@ -1,0 +1,77 @@
+/* ============================================================
+   Theme Bolívar — Premium Design Tokens
+   Estilo: Vercel/Stripe — Clean, airy, premium
+   Brand: Seguros Bolívar
+   ============================================================ */
+
+:root {
+  /* === Brand — Verde Corporativo Profundo === */
+  --c-brand: #006B44;
+  --c-brand-deep: #004D31;
+  --c-brand-light: #E8F5EF;
+  --c-brand-muted: #B8DFC9;
+
+  /* === Accent — Amarillo Seguros Bolívar (CTAs, badges) === */
+  --c-accent: #FCE850;
+  --c-accent-hover: #F5DD30;
+  --c-accent-text: #3D3200;
+
+  /* === Neutrals — Ultra clean === */
+  --c-bg: #FFFFFF;
+  --c-bg-subtle: #F9FAFB;
+  --c-bg-muted: #F3F4F6;
+  --c-border: #F0F0F0;
+  --c-border-hover: #D1D5DB;
+  --c-text: #111827;
+  --c-text-secondary: #6B7280;
+  --c-text-muted: #9CA3AF;
+
+  /* === Feedback === */
+  --c-success: #059669;
+  --c-success-bg: #ECFDF5;
+  --c-error: #DC2626;
+  --c-error-bg: #FEF2F2;
+  --c-warning: #D97706;
+  --c-warning-bg: #FFFBEB;
+  --c-info: #2563EB;
+  --c-info-bg: #EFF6FF;
+
+  /* === Shadows — Vercel-style subtle === */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+
+  /* === Radius — Organic === */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* === Typography === */
+  --font-sans: 'Inter', 'Segoe UI', 'Roboto', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  /* === Layout === */
+  --sidebar-width: 256px;
+  --sidebar-collapsed: 68px;
+  --header-height: 60px;
+
+  /* === Transitions === */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration: 200ms;
+
+  /* === PrimeNG Bridge === */
+  --primary-color: var(--c-brand);
+  --primary-color-text: #FFFFFF;
+  --surface-ground: var(--c-bg-subtle);
+  --surface-section: var(--c-bg);
+  --surface-card: var(--c-bg);
+  --surface-overlay: var(--c-bg);
+  --surface-border: var(--c-border);
+  --text-color: var(--c-text);
+  --text-color-secondary: var(--c-text-secondary);
+  --font-family: var(--font-sans);
+}

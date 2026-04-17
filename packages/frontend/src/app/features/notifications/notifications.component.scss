@@ -1,0 +1,8 @@
+@use '../../shared/styles/admin-layout';
+
+.notification-body {
+  font-size: var(--sb-ui-font-size-sm, 0.875rem);
+  color: var(--sb-ui-color-grayscale-D200, #525252);
+  margin-top: var(--sb-ui-spacing-xs, 0.25rem);
+  line-height: 1.4;
+}

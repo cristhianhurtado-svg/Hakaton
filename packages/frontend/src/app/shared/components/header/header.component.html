@@ -1,0 +1,51 @@
+<header class="header" role="banner">
+  <div class="header__left">
+    <button class="header__menu-btn" aria-label="Abrir menú" type="button">
+      <i class="pi pi-bars"></i>
+    </button>
+    <img
+      src="assets/logo-seguros-bolivar.webp"
+      alt="Seguros Bolívar"
+      class="header__logo"
+    />
+    <span class="header__separator">|</span>
+    <span class="header__breadcrumb">Conecta 2.0</span>
+  </div>
+
+  <div class="header__right">
+    <!-- Notifications -->
+    <button
+      class="header__icon-btn"
+      [routerLink]="'/notifications'"
+      aria-label="Notificaciones"
+      type="button"
+    >
+      <i class="pi pi-bell"></i>
+      <span class="header__badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+    </button>
+
+    <!-- User Menu -->
+    <div class="header__user" *ngIf="user$ | async as user">
+      <button
+        class="header__user-btn"
+        (click)="toggleUserMenu()"
+        [attr.aria-expanded]="showUserMenu"
+        aria-haspopup="true"
+        type="button"
+      >
+        <span class="header__avatar">
+          <i class="pi pi-user"></i>
+        </span>
+        <span class="header__user-name">{{ user.displayName || user.email }}</span>
+        <i class="pi pi-chevron-down header__chevron"></i>
+      </button>
+
+      <div class="header__dropdown" *ngIf="showUserMenu" role="menu">
+        <button class="header__dropdown-item" (click)="logout()" role="menuitem" type="button">
+          <i class="pi pi-sign-out"></i>
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
