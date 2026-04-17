@@ -49,13 +49,7 @@
   color: #FCE850;
   letter-spacing: -0.04em;
   font-family: var(--font-sans);
-  position: relative;
-
-  /* Subtle dot after 2.0 */
-  &::after {
-    content: '.';
-    color: #FCE850;
-  }
+  margin-left: 1px;
 }
 
 .header__tag {
