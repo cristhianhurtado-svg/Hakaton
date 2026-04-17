@@ -1,6 +1,6 @@
 /* ============================================================
-   Header — Premium minimal top bar
-   Style: Vercel/Stripe — barely there
+   Header — Premium top bar with typographic branding
+   "Conecta" in verde corporativo, "2.0" in amarillo accent
    ============================================================ */
 
 .header {
@@ -16,27 +16,62 @@
 .header__left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
-.header__logo {
-  height: 28px;
-  width: auto;
-  @media (max-width: 768px) { height: 24px; }
+/* ─── Typography Branding ─────────────────────────────────── */
+
+.header__brand {
+  display: flex;
+  align-items: baseline;
+  text-decoration: none;
+  gap: 0;
+  line-height: 1;
+  transition: opacity 150ms var(--ease);
+
+  &:hover {
+    opacity: 0.85;
+    text-decoration: none;
+  }
 }
 
-.header__separator {
-  color: var(--c-border, #F0F0F0);
-  font-size: 1.25rem;
-  font-weight: 200;
+.header__brand-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--c-brand, #006B44);
+  letter-spacing: -0.04em;
+  font-family: var(--font-sans);
 }
 
-.header__breadcrumb {
-  font-size: 0.8125rem;
+.header__brand-version {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #FCE850;
+  letter-spacing: -0.04em;
+  font-family: var(--font-sans);
+  position: relative;
+
+  /* Subtle dot after 2.0 */
+  &::after {
+    content: '.';
+    color: #FCE850;
+  }
+}
+
+.header__tag {
+  font-size: 0.625rem;
+  font-weight: 600;
   color: var(--c-text-muted, #9CA3AF);
-  font-weight: 500;
-  @media (max-width: 576px) { display: none; }
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 3px 10px;
+  border: 1px solid var(--c-border, #F0F0F0);
+  border-radius: var(--radius-full, 9999px);
+
+  @media (max-width: 768px) { display: none; }
 }
+
+/* ─── Mobile menu button ──────────────────────────────────── */
 
 .header__menu-btn {
   display: none;
@@ -55,6 +90,8 @@
   &:hover { background: var(--c-bg-muted, #F3F4F6); }
   @media (max-width: 768px) { display: flex; }
 }
+
+/* ─── Right side ──────────────────────────────────────────── */
 
 .header__right {
   display: flex;
@@ -180,7 +217,14 @@
   text-align: left;
   transition: background 150ms var(--ease);
 
-  &:hover {
-    background: var(--c-bg-muted, #F3F4F6);
+  &:hover { background: var(--c-bg-muted, #F3F4F6); }
+}
+
+/* ─── Responsive ──────────────────────────────────────────── */
+
+@media (max-width: 576px) {
+  .header__brand-name,
+  .header__brand-version {
+    font-size: 1.25rem;
   }
 }

@@ -1,19 +1,11 @@
 <nav class="sidebar" [class.sidebar--collapsed]="collapsed" role="navigation" aria-label="Navegación principal">
-  <!-- Logo -->
-  <div class="sidebar__logo">
-    <img
-      *ngIf="!collapsed"
-      src="assets/logo-seguros-bolivar.webp"
-      alt="Seguros Bolívar"
-      class="sidebar__logo-full"
-    />
-    <img
-      *ngIf="collapsed"
-      src="assets/logo-seguros-bolivar.webp"
-      alt="Seguros Bolívar"
-      class="sidebar__logo-icon"
-    />
-  </div>
+  <!-- Brand Wordmark -->
+  <a routerLink="/dashboard" class="sidebar__brand" *ngIf="!collapsed">
+    <span class="sidebar__brand-name">Conecta</span><span class="sidebar__brand-version">2.0</span>
+  </a>
+  <a routerLink="/dashboard" class="sidebar__brand sidebar__brand--collapsed" *ngIf="collapsed" title="Conecta 2.0">
+    <span class="sidebar__brand-icon">C</span>
+  </a>
 
   <!-- Toggle -->
   <button
@@ -58,9 +50,9 @@
     </ul>
   </div>
 
-  <!-- Conecta 2.0 badge at bottom -->
+  <!-- Footer -->
   <div class="sidebar__footer" *ngIf="!collapsed">
-    <span class="sidebar__footer-badge">Conecta 2.0</span>
-    <span class="sidebar__footer-version">Portal de APIs</span>
+    <span class="sidebar__footer-text">Seguros Bolívar</span>
+    <span class="sidebar__footer-sub">Open Insurance Platform</span>
   </div>
 </nav>
