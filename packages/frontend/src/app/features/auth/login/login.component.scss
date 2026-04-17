@@ -22,10 +22,27 @@
     margin-bottom: 32px;
   }
 
-  &__logo-img {
-    height: 52px;
-    width: auto;
-    margin-bottom: 12px;
+  &__wordmark {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 8px;
+
+    &-name {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: #006B44;
+      letter-spacing: -0.04em;
+    }
+
+    &-version {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: #FCE850;
+      letter-spacing: -0.04em;
+      margin-left: 2px;
+    }
   }
 
   &__subtitle {
