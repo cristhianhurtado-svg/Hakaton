@@ -21,81 +21,50 @@
         <div class="catalog-filters">
           <span class="p-input-icon-left catalog-filters__search">
             <i class="pi pi-search"></i>
-            <input
-              type="text"
-              pInputText
-              [(ngModel)]="searchQuery"
+            <input type="text" pInputText [(ngModel)]="searchQuery"
               placeholder="Buscar APIs por nombre, descripción..."
-              (keyup.enter)="onSearch()"
-              class="w-full"
-            />
+              (keyup.enter)="onSearch()" class="w-full" />
           </span>
-          <p-dropdown
-            [options]="categories"
-            [(ngModel)]="selectedCategory"
-            optionLabel="name"
-            optionValue="id"
-            placeholder="Todas las categorías"
-            [showClear]="true"
-            (onChange)="loadApis()"
-            styleClass="catalog-filters__dropdown"
-          />
+          <p-dropdown [options]="categories" [(ngModel)]="selectedCategory"
+            optionLabel="name" optionValue="id" placeholder="Todas las categorías"
+            [showClear]="true" (onChange)="loadApis()" styleClass="catalog-filters__dropdown" />
         </div>
       </div>
 
-      <!-- API Cards Grid — click opens modal -->
+      <!-- API Cards -->
       <div class="cards-grid" *ngIf="!loading">
-        <div
-          class="api-card"
-          *ngFor="let api of apis"
-          (click)="openApiDetail(api)"
-          tabindex="0"
-          role="button"
-          (keyup.enter)="openApiDetail(api)"
-        >
+        <div class="api-card" *ngFor="let api of apis"
+          (click)="openApiDetail(api)" tabindex="0" role="button" (keyup.enter)="openApiDetail(api)">
           <div class="api-card__header">
             <h3 class="api-card__name">{{ api.name }}</h3>
-            <p-tag
-              [value]="getProfileSupport(api)"
-              [severity]="getProfileSupport(api) === 'both' ? 'success' : 'info'"
-            />
+            <p-tag [value]="getProfileSupport(api)"
+              [severity]="getProfileSupport(api) === 'both' ? 'success' : 'info'" />
           </div>
           <p class="api-card__description">{{ api.description }}</p>
           <div class="api-card__footer">
-            <span class="api-card__version" *ngIf="getApiVersion(api) !== 'N/A'">
-              v{{ getApiVersion(api) }}
-            </span>
-            <p-tag
-              *ngIf="isAcord(api)"
-              value="ACORD"
-              severity="warning"
-              [rounded]="true"
-            />
+            <span class="api-card__version" *ngIf="getApiVersion(api) !== 'N/A'">v{{ getApiVersion(api) }}</span>
+            <p-tag *ngIf="isAcord(api)" value="ACORD" severity="warning" [rounded]="true" />
           </div>
         </div>
       </div>
 
-      <!-- Loading Skeleton -->
+      <!-- Skeleton -->
       <div class="cards-grid" *ngIf="loading">
         <div class="api-card api-card--skeleton" *ngFor="let i of [1,2,3,4,5,6]">
-          <div class="api-card__header">
-            <div class="skeleton-line skeleton-line--title"></div>
-          </div>
+          <div class="api-card__header"><div class="skeleton-line skeleton-line--title"></div></div>
           <div class="skeleton-line skeleton-line--text"></div>
           <div class="skeleton-line skeleton-line--text skeleton-line--short"></div>
         </div>
       </div>
 
-      <!-- Empty State — Premium branded -->
+      <!-- Empty State -->
       <div class="empty-state-premium" *ngIf="!loading && apis.length === 0">
         <div class="empty-state-premium__icon-wrap">
           <div class="empty-state-premium__icon-bg"></div>
           <i class="pi pi-box empty-state-premium__icon"></i>
         </div>
         <h3 class="empty-state-premium__title">Aún no hay APIs aquí</h3>
-        <p class="empty-state-premium__text">
-          Intenta buscar con otros términos o cambia de categoría para explorar nuestro catálogo de APIs de seguros.
-        </p>
+        <p class="empty-state-premium__text">Intenta buscar con otros términos o cambia de categoría.</p>
         <div class="empty-state-premium__actions" *ngIf="searchQuery || selectedCategory">
           <button class="btn btn--secondary" (click)="searchQuery = ''; selectedCategory = null; loadApis()">
             <i class="pi pi-filter-slash"></i> Limpiar búsqueda
@@ -107,26 +76,18 @@
 </div>
 
 <!-- ============================================================
-     API DETAILS MODAL — Premium Seguros Bolívar
-     Backdrop blur + white rounded container
+     API DOCUMENTATION MODAL — Full 4-tab documentation
      ============================================================ -->
-<div
-  class="modal-backdrop"
-  *ngIf="showModal && selectedApi"
-  (click)="onBackdropClick($event)"
-  (keyup.escape)="closeModal()"
-  role="dialog"
-  aria-modal="true"
-  [attr.aria-label]="'Detalle de ' + getApiName(selectedApi)"
->
+<div class="modal-backdrop" *ngIf="showModal && selectedApi && apiDocs"
+  (click)="onBackdropClick($event)" (keyup.escape)="closeModal()"
+  role="dialog" aria-modal="true" [attr.aria-label]="'Documentación de ' + getApiName(selectedApi)">
   <div class="modal" (click)="$event.stopPropagation()">
 
-    <!-- Close button -->
     <button class="modal__close" (click)="closeModal()" aria-label="Cerrar" type="button">
       <i class="pi pi-times"></i>
     </button>
 
-    <!-- ─── HEADER ─────────────────────────────────────────── -->
+    <!-- HEADER -->
     <div class="modal__header">
       <div class="modal__header-top">
         <div class="modal__icon">
@@ -144,71 +105,64 @@
         </div>
         <h2 class="modal__title">{{ getApiName(selectedApi) }}</h2>
       </div>
-
       <div class="modal__badges">
         <span class="badge badge--version">v{{ getApiVersion(selectedApi) }}</span>
         <span class="badge badge--acord" *ngIf="isAcord(selectedApi)">ACORD</span>
         <span class="badge badge--profile">{{ getProfileSupport(selectedApi) }}</span>
         <span class="badge badge--active">Activa</span>
       </div>
-
       <p class="modal__description">{{ selectedApi.description }}</p>
     </div>
 
-    <!-- ─── TABS ───────────────────────────────────────────── -->
+    <!-- 4 TABS -->
     <div class="modal__tabs">
-      <button
-        class="modal__tab"
-        [class.modal__tab--active]="activeTab === 'general'"
-        (click)="activeTab = 'general'"
-        type="button"
-      >
-        <i class="pi pi-info-circle"></i> Información General
+      <button class="modal__tab" [class.modal__tab--active]="activeTab === 'general'" (click)="activeTab = 'general'" type="button">
+        <i class="pi pi-info-circle"></i> General
       </button>
-      <button
-        class="modal__tab"
-        [class.modal__tab--active]="activeTab === 'specs'"
-        (click)="activeTab = 'specs'"
-        type="button"
-      >
-        <i class="pi pi-cog"></i> Especificaciones Técnicas
+      <button class="modal__tab" [class.modal__tab--active]="activeTab === 'endpoints'" (click)="activeTab = 'endpoints'" type="button">
+        <i class="pi pi-link"></i> Endpoints
+      </button>
+      <button class="modal__tab" [class.modal__tab--active]="activeTab === 'schemas'" (click)="activeTab = 'schemas'" type="button">
+        <i class="pi pi-code"></i> Schemas
+      </button>
+      <button class="modal__tab" [class.modal__tab--active]="activeTab === 'errors'" (click)="activeTab = 'errors'" type="button">
+        <i class="pi pi-exclamation-circle"></i> Errores
       </button>
     </div>
 
-    <!-- ─── TAB 1: Información General ─────────────────────── -->
+    <!-- ─── TAB 1: General ─────────────────────────────────── -->
     <div class="modal__body" *ngIf="activeTab === 'general'">
       <div class="info-section">
         <h4 class="info-section__title">Casos de Uso</h4>
         <ul class="info-section__list">
-          <li>Cotización de vehículos particulares y públicos</li>
-          <li>Cálculo de prima en tiempo real según perfil de riesgo</li>
-          <li>Integración con tabla Fasecolda para valoración</li>
-          <li>Soporte para múltiples coberturas (todo riesgo, pérdida total, RC)</li>
+          <li *ngFor="let uc of apiDocs.useCases">{{ uc }}</li>
         </ul>
       </div>
-
       <div class="info-grid">
-        <div class="info-card">
-          <span class="info-card__label">SLA Disponibilidad</span>
-          <span class="info-card__value">99.9%</span>
+        <div class="info-card" *ngFor="let sla of apiDocs.sla">
+          <span class="info-card__label">{{ sla.label }}</span>
+          <span class="info-card__value">{{ sla.value }}</span>
         </div>
-        <div class="info-card">
-          <span class="info-card__label">Latencia Promedio</span>
-          <span class="info-card__value">&lt; 200ms</span>
-        </div>
-        <div class="info-card">
-          <span class="info-card__label">Rate Limit</span>
-          <span class="info-card__value">200 req/min</span>
-        </div>
-        <div class="info-card">
-          <span class="info-card__label">Formato</span>
-          <span class="info-card__value">JSON (ACORD)</span>
+      </div>
+
+      <!-- Changelog -->
+      <div class="info-section" *ngIf="apiDocs.changelog.length > 0" style="margin-top: 24px;">
+        <h4 class="info-section__title">Changelog</h4>
+        <div class="changelog" *ngFor="let entry of apiDocs.changelog">
+          <div class="changelog__header">
+            <span class="badge badge--version">v{{ entry.version }}</span>
+            <span class="changelog__date">{{ entry.date }}</span>
+          </div>
+          <ul class="changelog__list">
+            <li *ngFor="let change of entry.changes">{{ change }}</li>
+          </ul>
         </div>
       </div>
     </div>
 
-    <!-- ─── TAB 2: Especificaciones Técnicas ───────────────── -->
-    <div class="modal__body" *ngIf="activeTab === 'specs'">
+    <!-- ─── TAB 2: Endpoints ───────────────────────────────── -->
+    <div class="modal__body" *ngIf="activeTab === 'endpoints'">
+      <!-- Connection info -->
       <div class="spec-row">
         <span class="spec-row__label">Autenticación</span>
         <span class="spec-row__value">
@@ -217,38 +171,105 @@
         </span>
       </div>
       <div class="spec-row">
-        <span class="spec-row__label">Content-Type</span>
-        <code class="spec-row__code">application/json</code>
-      </div>
-      <div class="spec-row">
         <span class="spec-row__label">Sandbox</span>
-        <code class="spec-row__code">https://sandbox.conecta2.segurosbolivar.com/v1/api/{{ getApiSlug(selectedApi) }}</code>
+        <code class="spec-row__code">https://sandbox.conecta2.segurosbolivar.com{{ apiDocs.endpoints[0]?.path }}</code>
       </div>
-      <div class="spec-row">
+      <div class="spec-row" style="border-bottom: none;">
         <span class="spec-row__label">Producción</span>
-        <code class="spec-row__code">https://api.conecta2.segurosbolivar.com/v1/api/{{ getApiSlug(selectedApi) }}</code>
-      </div>
-      <div class="spec-row">
-        <span class="spec-row__label">Versionamiento</span>
-        <code class="spec-row__code">Header: Accept-Version: {{ getApiVersion(selectedApi) }}</code>
+        <code class="spec-row__code">https://api.conecta2.segurosbolivar.com{{ apiDocs.endpoints[0]?.path }}</code>
       </div>
 
-      <!-- Code Snippet -->
-      <div class="code-snippet">
-        <div class="code-snippet__header">
-          <span class="code-snippet__lang">cURL — Sandbox</span>
-          <button class="code-snippet__copy" type="button" aria-label="Copiar">
-            <i class="pi pi-copy"></i>
-          </button>
+      <!-- Endpoints list -->
+      <div class="endpoints-list">
+        <div class="endpoint" *ngFor="let ep of apiDocs.endpoints">
+          <div class="endpoint__header">
+            <span class="endpoint__method" [attr.data-method]="ep.method">{{ ep.method }}</span>
+            <code class="endpoint__path">{{ ep.path }}</code>
+          </div>
+          <p class="endpoint__summary">{{ ep.summary }}</p>
+          <p class="endpoint__description">{{ ep.description }}</p>
         </div>
-        <pre class="code-snippet__body">{{ getCurlExample(selectedApi) }}</pre>
       </div>
     </div>
 
-    <!-- ─── FOOTER ─────────────────────────────────────────── -->
+    <!-- ─── TAB 3: Schemas (Request + Response + Examples) ── -->
+    <div class="modal__body" *ngIf="activeTab === 'schemas'">
+      <!-- Request Schema -->
+      <div class="info-section">
+        <h4 class="info-section__title">Request Body</h4>
+        <div class="schema-table">
+          <div class="schema-table__header">
+            <span>Campo</span><span>Tipo</span><span>Req</span><span>Descripción</span>
+          </div>
+          <div class="schema-table__row" *ngFor="let field of apiDocs.requestSchema">
+            <code class="schema-table__field">{{ field.field }}</code>
+            <span class="schema-table__type">{{ field.type }}</span>
+            <span class="schema-table__req" [class.schema-table__req--yes]="field.required">{{ field.required ? '✓' : '—' }}</span>
+            <span class="schema-table__desc">{{ field.description }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sample Request -->
+      <div class="info-section">
+        <h4 class="info-section__title">Ejemplo de Request</h4>
+        <div class="code-snippet">
+          <div class="code-snippet__header">
+            <span class="code-snippet__lang">JSON — Request Body</span>
+          </div>
+          <pre class="code-snippet__body">{{ apiDocs.sampleRequest }}</pre>
+        </div>
+      </div>
+
+      <!-- Response Schema -->
+      <div class="info-section">
+        <h4 class="info-section__title">Response Body (200 OK)</h4>
+        <div class="schema-table">
+          <div class="schema-table__header">
+            <span>Campo</span><span>Tipo</span><span></span><span>Descripción</span>
+          </div>
+          <div class="schema-table__row" *ngFor="let field of apiDocs.responseSchema">
+            <code class="schema-table__field">{{ field.field }}</code>
+            <span class="schema-table__type">{{ field.type }}</span>
+            <span></span>
+            <span class="schema-table__desc">{{ field.description }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sample Response -->
+      <div class="info-section">
+        <h4 class="info-section__title">Ejemplo de Response</h4>
+        <div class="code-snippet">
+          <div class="code-snippet__header">
+            <span class="code-snippet__lang">JSON — 200 OK</span>
+          </div>
+          <pre class="code-snippet__body">{{ apiDocs.sampleResponse }}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── TAB 4: Error Codes ─────────────────────────────── -->
+    <div class="modal__body" *ngIf="activeTab === 'errors'">
+      <div class="error-card" *ngFor="let err of apiDocs.errorCodes">
+        <div class="error-card__header">
+          <span class="error-card__code" [class]="'error-card__code--' + (err.code >= 500 ? 'server' : err.code >= 400 ? 'client' : 'info')">
+            {{ err.code }}
+          </span>
+          <span class="error-card__title">{{ err.title }}</span>
+        </div>
+        <p class="error-card__description">{{ err.description }}</p>
+        <div class="error-card__resolution">
+          <i class="pi pi-check-circle"></i>
+          <span>{{ err.resolution }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
     <div class="modal__footer">
       <button class="btn btn--secondary" [routerLink]="['/catalog', selectedApi.id]" (click)="closeModal()">
-        <i class="pi pi-book"></i> Ver Documentación Completa
+        <i class="pi pi-book"></i> Documentación Completa
       </button>
       <button class="btn btn--primary" [routerLink]="['/sandbox']" [queryParams]="{api: getApiSlug(selectedApi)}" (click)="closeModal()">
         <i class="pi pi-play"></i> Probar en Sandbox
